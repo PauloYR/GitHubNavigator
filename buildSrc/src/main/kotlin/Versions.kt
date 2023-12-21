@@ -7,6 +7,8 @@ object Versions {
     const val lifecycleRuntime = "2.6.1"
     const val activityCompose = "1.7.0"
     const val composeBom = "2023.03.00"
+    const val coil = "2.5.0"
+
     const val coroutines = "1.6.4"
 
     const val junit = "4.13.2"
