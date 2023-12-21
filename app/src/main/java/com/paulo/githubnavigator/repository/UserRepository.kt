@@ -11,13 +11,14 @@ interface UserRepository {
     ): User?
 
     suspend fun getInfoRepositorysByUser(username: String): List<Repository>
+
+    suspend fun searchUsers(username: String): List<User>
 }
 
 class UserRepositoryImpl(private val githubService: GithubService) : UserRepository {
     override suspend fun getUsers(): List<User> {
         return try {
-            val result = githubService.getUsers()
-            return result
+           githubService.getUsers()
         } catch (e: Exception) {
             emptyList()
         }
@@ -34,6 +35,14 @@ class UserRepositoryImpl(private val githubService: GithubService) : UserReposit
     override suspend fun getInfoRepositorysByUser(username: String): List<Repository> {
         return try {
             githubService.getInfoRepositorysByUser(username)
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    override suspend fun searchUsers(username: String): List<User> {
+        return try {
+            githubService.searchUser(username).items
         } catch (e: Exception) {
             emptyList()
         }
