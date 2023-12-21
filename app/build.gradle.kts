@@ -58,6 +58,16 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutines}")
+
+    implementation("com.squareup.retrofit2:retrofit:${Versions.retrofit}")
+    implementation("com.squareup.retrofit2:converter-gson:${Versions.retrofit}")
+    implementation("com.squareup.okhttp3:logging-interceptor:${Versions.okhttpLogging}")
+
+    implementation("io.insert-koin:koin-android:${Versions.koin}")
+
     testImplementation("junit:junit:${Versions.junit}")
     androidTestImplementation("androidx.test.ext:junit:${Versions.androidXJunit}")
     androidTestImplementation("androidx.test.espresso:espresso-core:${Versions.espresso}")
