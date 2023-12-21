@@ -1,0 +1,1 @@
+/Users/willian/AndroidStudioProjects/GitHubNavigator/buildSrc/build/classes/kotlin/main/Versions.class
