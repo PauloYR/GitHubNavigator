@@ -18,12 +18,14 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -38,10 +40,6 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun UserDetails(navController: NavHostController, username: String) {
     val viewModel = koinViewModel<UserDetailsViewModel>()
-
-    viewModel.getUserInfo(username)
-    viewModel.getRepositoriesByUserName(username)
-
     Column(
         modifier = Modifier
             .padding(16.dp)
@@ -51,6 +49,10 @@ fun UserDetails(navController: NavHostController, username: String) {
         Divider()
         Spacer(modifier = Modifier.height(16.dp))
         Repositories(viewModel)
+    }
+    LaunchedEffect(true) {
+        viewModel.getUserInfo(username)
+        viewModel.getRepositoriesByUserName(username)
     }
 }
 
@@ -76,6 +78,11 @@ fun UserInfo(viewModel: UserDetailsViewModel) {
             fontWeight = FontWeight.Bold
         )
         Text(text = user.value?.login ?: "")
+        Spacer(modifier = Modifier.height(10.dp))
+        Text(
+            text = user.value?.bio ?: "",
+            fontStyle = FontStyle.Italic
+        )
         Spacer(modifier = Modifier.height(10.dp))
         Row {
             Icon(
@@ -143,22 +150,30 @@ fun Repositories(viewModel: UserDetailsViewModel) {
 @Composable
 fun RepositoryItem(repository: Repository) {
     Column {
-        Text(text = repository.name)
+        Text(
+            text = repository.name,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold
+        )
         Text(
             text = repository.description ?: "",
             maxLines = 2,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
         )
+        Spacer(modifier = Modifier.height(10.dp))
 
         Row {
             Icon(
                 painterResource(id = R.drawable.book),
                 contentDescription = ""
             )
+            Spacer(modifier = Modifier.width(10.dp))
+            Text(repository.stargazersCount.toString())
         }
 
         Row {
             Icon(painterResource(id = R.drawable.eye), contentDescription = "")
+            Spacer(modifier = Modifier.width(10.dp))
             Text(repository.watchersCount.toString())
         }
     }

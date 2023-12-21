@@ -17,14 +17,17 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +41,7 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.paulo.githubnavigator.NavigationItem
 import com.paulo.githubnavigator.model.User
+import com.paulo.githubnavigator.network.Output
 import com.paulo.githubnavigator.viewModel.UsersViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -47,7 +51,6 @@ fun Users(
     navController: NavHostController
 ) {
     val usersViewModel: UsersViewModel = koinViewModel()
-//    usersViewModel.getUsers()
 
     val users = usersViewModel.users.collectAsState()
 
@@ -75,26 +78,46 @@ fun Users(
             ),
             modifier = Modifier.fillMaxWidth()
         )
+        Spacer(modifier = Modifier.height(20.dp))
         Text(
             text = "Usuários",
             fontSize = 26.sp,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(20.dp))
-        if (users.value.isNotEmpty()) {
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                items(
-                    items = users.value,
-                    itemContent = {
-                        UserItem(user = it, navController)
-                    })
+
+        when (val output = users.value) {
+            is Output.Success -> {
+                val data = output.data ?: listOf()
+                LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    items(
+                        items = data,
+                        itemContent = {
+                            UserItem(user = it, navController)
+                        })
+                }
             }
-        } else {
-            Text(
-                text = "Não foi possivel buscar os usuários",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+
+            is Output.Error -> {
+                Text(
+                    text = "Não foi possivel buscar os usuários. Mais detalhes: ${output.error.message}",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
+            else -> CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.CenterHorizontally)
             )
+        }
+    }
+
+    var functionExecuted by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(functionExecuted) {
+        if (!functionExecuted) {
+            usersViewModel.getUsers()
+            functionExecuted = true
         }
     }
 }

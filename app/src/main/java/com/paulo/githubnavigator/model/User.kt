@@ -1,9 +1,12 @@
 package com.paulo.githubnavigator.model
 
+import com.google.gson.annotations.SerializedName
+
 data class User(
     val login: String?,
     val id: Int?,
     val nodeId: String?,
+    @SerializedName("avatar_url")
     val avatarUrl: String?,
     val gravatarId: String?,
     val url: String?,
@@ -23,5 +26,6 @@ data class User(
     val followers: Int?,
     val following: Int?,
     val location: String?,
-    val company: String?
+    val company: String?,
+    val bio: String?
 )

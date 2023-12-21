@@ -1,5 +1,7 @@
 package com.paulo.githubnavigator.model
 
+import com.google.gson.annotations.SerializedName
+
 data class Repository(
     val id: Long,
     val nodeId: String,
@@ -56,7 +58,9 @@ data class Repository(
     val svnUrl: String,
     val homepage: String?,
     val size: Long,
+    @SerializedName("stargazers_count")
     val stargazersCount: Int,
+    @SerializedName("watchers_count")
     val watchersCount: Int,
     val language: String?,
     val hasIssues: Boolean,
