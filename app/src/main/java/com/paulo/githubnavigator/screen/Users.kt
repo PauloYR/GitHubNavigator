@@ -46,12 +46,20 @@ fun Users(
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(20.dp))
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            items(
-                items = users.value,
-                itemContent = {
-                    UserItem(user = it, navController)
-                })
+        if (users.value.isNotEmpty()){
+            LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                items(
+                    items = users.value,
+                    itemContent = {
+                        UserItem(user = it, navController)
+                    })
+            }
+        }else{
+            Text(
+                text = "Não foi possivel buscar os usuários",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold
+            )
         }
     }
 }

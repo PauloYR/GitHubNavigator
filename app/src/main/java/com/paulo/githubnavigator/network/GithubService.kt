@@ -15,5 +15,5 @@ interface GithubService {
     ): User
 
     @GET("users/{username}/repos")
-    suspend fun getInfoRepositorysByUser(): List<Repository>
+    suspend fun getInfoRepositorysByUser(@Path("username") username: String): List<Repository>
 }

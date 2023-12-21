@@ -19,5 +19,9 @@ data class User(
     val receivedEventsUrl: String?,
     val type: String?,
     val siteAdmin: Boolean?,
-    val name: String?
+    val name: String?,
+    val followers: Int?,
+    val following: Int?,
+    val location: String?,
+    val company: String?
 )
