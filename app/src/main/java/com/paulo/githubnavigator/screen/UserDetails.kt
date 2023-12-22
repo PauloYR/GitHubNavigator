@@ -10,9 +10,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.LocationOn
@@ -45,10 +45,8 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun UserDetails(navController: NavHostController, username: String) {
     val viewModel = koinViewModel<UserDetailsViewModel>()
-    Column(
-        modifier = Modifier
-            .padding(16.dp)
-    ) {
+    Column( modifier = Modifier
+        .padding(16.dp)) {
         Icon(
             Icons.Filled.ArrowBack,
             contentDescription = "",
@@ -56,17 +54,23 @@ fun UserDetails(navController: NavHostController, username: String) {
                 navController.popBackStack()
             }
         )
-        Spacer(modifier = Modifier.height(16.dp))
-        UserInfo(viewModel)
-        Spacer(modifier = Modifier.height(16.dp))
-        Divider()
-        Spacer(modifier = Modifier.height(16.dp))
-        Repositories(viewModel)
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+        ) {
+            Spacer(modifier = Modifier.height(16.dp))
+            UserInfo(viewModel)
+            Spacer(modifier = Modifier.height(16.dp))
+            Divider()
+            Spacer(modifier = Modifier.height(16.dp))
+            Repositories(viewModel)
+        }
+        LaunchedEffect(true) {
+            viewModel.getUserInfo(username)
+            viewModel.getRepositoriesByUserName(username)
+        }
     }
-    LaunchedEffect(true) {
-        viewModel.getUserInfo(username)
-        viewModel.getRepositoriesByUserName(username)
-    }
+
 }
 
 @Composable
@@ -102,7 +106,7 @@ fun UserInfo(viewModel: UserDetailsViewModel) {
                 Row {
                     Icon(
                         Icons.Filled.Person,
-                        contentDescription = ""
+                        contentDescription = "Pessoas"
                     )
 
                     Text(
@@ -124,7 +128,7 @@ fun UserInfo(viewModel: UserDetailsViewModel) {
                 Row {
                     Icon(
                         painterResource(id = R.drawable.apartment),
-                        contentDescription = ""
+                        contentDescription = "Empresa"
                     )
 
                     Text(text = user?.company ?: "")
@@ -133,14 +137,16 @@ fun UserInfo(viewModel: UserDetailsViewModel) {
                 Row {
                     Icon(
                         Icons.Filled.LocationOn,
-                        contentDescription = ""
+                        contentDescription = "Localização"
                     )
 
                     Text(text = user?.location ?: "")
                 }
             }
 
-            else -> CircularProgressIndicator()
+            else -> CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
         }
     }
 }
@@ -151,12 +157,10 @@ fun Repositories(viewModel: UserDetailsViewModel) {
     Column(modifier = Modifier.fillMaxWidth()) {
         when (val output = repositories.value) {
             is Output.Success -> {
-                LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    items(
-                        items = output.data ?: listOf(),
-                        itemContent = {
-                            RepositoryItem(it)
-                        })
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    output.data?.forEach {
+                        RepositoryItem(it)
+                    }
                 }
             }
 
