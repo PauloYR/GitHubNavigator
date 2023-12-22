@@ -21,5 +21,7 @@ object Versions {
 
     const val koin = "3.5.3"
 
-
+    const val mockito = "5.1.1"
+    const val mockitoKotlin = "2.1.0"
+    const val coreKtxTest = "1.2.0"
 }
