@@ -143,7 +143,13 @@ fun UserInfo(viewModel: UserDetailsViewModel) {
                     Text(text = user?.location ?: "")
                 }
             }
-
+            is Output.Error -> {
+                Text(
+                    text = "Não foi possivel buscar as informação do usuário. Para mais detalhes: ${output.error.message}",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
             else -> CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
