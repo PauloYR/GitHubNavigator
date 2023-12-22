@@ -1,7 +1,5 @@
 package com.paulo.githubnavigator.screen
 
-import android.os.Handler
-import android.os.Looper
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,7 +24,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -52,25 +49,17 @@ fun Users(
 ) {
     val usersViewModel: UsersViewModel = koinViewModel()
 
-    val users = usersViewModel.users.collectAsState()
 
     Column(
         modifier = Modifier
             .padding(16.dp)
             .fillMaxSize()
     ) {
-
-        val handler = remember { Handler(Looper.getMainLooper()) }
+        val search = usersViewModel.searchUserText.collectAsState()
         OutlinedTextField(
-            value = usersViewModel.searchUserText,
+            value = search.value,
             onValueChange = {
-                usersViewModel.searchUserText = it
-
-                handler.removeCallbacksAndMessages(null)
-
-                handler.postDelayed({
-                    usersViewModel.searchUser(usersViewModel.searchUserText)
-                }, 300)
+                usersViewModel.updateSearch(it)
             },
             label = { Text("Busque por usuários") },
             keyboardOptions = KeyboardOptions.Default.copy(
@@ -85,7 +74,24 @@ fun Users(
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(20.dp))
+        ListUsers(usersViewModel, navController)
 
+        var functionExecuted by rememberSaveable { mutableStateOf(false) }
+
+        LaunchedEffect(functionExecuted) {
+            if (!functionExecuted) {
+                functionExecuted = true
+                usersViewModel.initialize()
+            }
+        }
+    }
+}
+
+@Composable
+fun ListUsers(usersViewModel: UsersViewModel, navController: NavHostController) {
+    val users = usersViewModel.users.collectAsState()
+    Column ( modifier = Modifier
+        .fillMaxSize()){
         when (val output = users.value) {
             is Output.Success -> {
                 val data = output.data ?: listOf()
@@ -109,15 +115,6 @@ fun Users(
             else -> CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
-        }
-    }
-
-    var functionExecuted by rememberSaveable { mutableStateOf(false) }
-
-    LaunchedEffect(functionExecuted) {
-        if (!functionExecuted) {
-            usersViewModel.getUsers()
-            functionExecuted = true
         }
     }
 }
