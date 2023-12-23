@@ -10,11 +10,8 @@ import com.paulo.githubnavigator.network.Output
 import com.paulo.githubnavigator.repository.UserRepository
 import com.paulo.githubnavigator.screen.Users
 import com.paulo.githubnavigator.ui.theme.GitHubNavigatorTheme
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.withContext
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -67,12 +64,6 @@ class UserTest: KoinTest {
         composeTestRule.onNodeWithText("Nome do Usuário 1").assertIsDisplayed()
         composeTestRule.onNodeWithText("Nome do Usuário 2").assertIsDisplayed()
         composeTestRule.onNodeWithText("Nome do Usuário 3").assertIsDisplayed()
-    }
-
-    private suspend fun advanceTimeBy(delayMillis: Long) {
-        withContext(Dispatchers.Main) {
-            delay(delayMillis)
-        }
     }
 
     @Test

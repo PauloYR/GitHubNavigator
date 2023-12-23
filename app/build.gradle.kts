@@ -75,7 +75,7 @@ dependencies {
     testImplementation("io.insert-koin:koin-test:${Versions.koin}")
     testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:${Versions.mockitoKotlin}")
     androidTestImplementation("org.mockito:mockito-android:${Versions.mockito}")
-    androidTestImplementation("androidx.navigation:navigation-testing:2.7.6")
+    androidTestImplementation("androidx.navigation:navigation-testing:${Versions.composeNavigation}")
     androidTestImplementation("androidx.test.ext:junit:${Versions.androidXJunit}")
     androidTestImplementation("androidx.test.espresso:espresso-core:${Versions.espresso}")
     androidTestImplementation(platform("androidx.compose:compose-bom:${Versions.composeBom}"))
