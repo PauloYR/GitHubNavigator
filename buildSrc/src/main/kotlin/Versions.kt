@@ -17,6 +17,7 @@ object Versions {
     const val espresso = "3.5.1"
 
     const val retrofit = "2.9.0"
+    const val ktor = "2.2.4"
     const val okhttpLogging = "4.9.3"
 
     const val koin = "3.5.3"

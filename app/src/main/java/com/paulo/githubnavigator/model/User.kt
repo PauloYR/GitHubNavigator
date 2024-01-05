@@ -1,12 +1,15 @@
 package com.paulo.githubnavigator.model
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class User(
     val login: String?,
     val id: Int? = -1,
+    @SerialName("node_id")
     val nodeId: String? = "",
-    @SerializedName("avatar_url")
+    @SerialName("avatar_url")
     val avatarUrl: String? = "",
     val gravatarId: String? = "",
     val url: String? = "",

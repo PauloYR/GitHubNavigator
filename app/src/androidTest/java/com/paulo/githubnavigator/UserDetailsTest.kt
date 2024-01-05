@@ -9,6 +9,7 @@ import androidx.navigation.testing.TestNavHostController
 import com.paulo.githubnavigator.model.User
 import com.paulo.githubnavigator.network.Output
 import com.paulo.githubnavigator.repository.UserRepository
+import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -66,7 +67,10 @@ class UserDetailsTest : KoinTest {
 
         advanceTimeBy(500)
 
-
         composeTestRule.onNodeWithTag("rowUserDetails_${username}").performClick()
+
+        val route = navController.currentBackStackEntry?.destination?.route
+
+        assertEquals(route, "${Screen.USERS_DETAILS.name}/${fakeUsers[0].login}")
     }
 }
